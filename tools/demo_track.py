@@ -253,6 +253,9 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
     timer = Timer()
     frame_id = 0
     results = []
+    results.append("#\n")
+    results.append("#" + str(args)+"\n") 
+    results.append("#frame,id,x1,y1,width,height,score,-1,-1,-1\n")
     while True:
         if frame_id % 20 == 0:
             logger.info('Processing frame {} ({:.2f} fps)'.format(frame_id, 1. / max(1e-5, timer.average_time)))
