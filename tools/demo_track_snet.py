@@ -112,9 +112,17 @@ def extractTracks(textFile, device):
                 continue
             split = line.split(",")
             line_frame = int(split[0])
+            btDict[line_frame] = []
+    print("Brute force\n\n\n\n\\n\n\\n\\n\n\n\n\n")
+    with open(textFile, "r") as f:
+        for line in f:
+            if line[0] == "#" or line[0] == " ":
+                continue
+            split = line.split(",")
+            line_frame = int(split[0])
 
             line_detection = list(map(float, line.split(',')[2:6])) + [1.0, 1.0, 0.0]
-            btDict.setdefault(line_frame,[]).append(line_detection)
+            btDict[line_frame].append(line_detection)
 
     for key in btDict:
         print(key)
