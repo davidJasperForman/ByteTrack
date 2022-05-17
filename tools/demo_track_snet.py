@@ -321,6 +321,7 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
             if gt:
                 outputs = gtDict.get(frame_id+1, [None])
             if outputs[0] is not None:
+                print(outputs[0]) #debug
                 online_targets = tracker.update(outputs[0], [img_info['height'], img_info['width']], exp.test_size)
                 online_tlwhs = []
                 online_ids = []
