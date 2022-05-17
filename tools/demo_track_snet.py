@@ -118,6 +118,7 @@ def extractTracks(textFile, device):
 
     for key in btDict:
         print(key)
+        print("This doesn't work but the other does") #debugging
         # print(btDict[key])
         adjusted =  torch.tensor(btDict[key], device=device, dtype=torch.float32)
         # the gt format was x_bbox, y_bbox, w_bbox, h_bbox, converting to (x1, y1, x2, y2
