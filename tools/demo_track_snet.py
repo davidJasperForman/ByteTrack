@@ -111,10 +111,12 @@ def extractTracks(textFile, device):
             if line[0] == "#" or line[0] == " ":
                 continue
             split = line.split(",")
+            print(line) #debug
             line_frame = int(split[0])
 
             line_detection = list(map(float, line.split(',')[2:6])) + [1.0, 1.0, 0.0]
             btDict.setdefault(line_frame,[]).append(line_detection)
+            print(line_detection)
 
     for key in btDict.keys():
         adjusted =  torch.tensor(btDict[key], device=device, dtype=torch.float32)
@@ -124,7 +126,7 @@ def extractTracks(textFile, device):
         adjusted[:, 3] = adjusted[:, 1] + adjusted[:, 3]
 
         btDict[key] = adjusted
-
+    print([btDict[key] for key in list(btDict.keys())[0:3]]) #debug
     return btDict
 
 def write_results(filename, results):
