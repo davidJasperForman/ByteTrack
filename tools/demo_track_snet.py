@@ -112,22 +112,11 @@ def extractTracks(textFile, device):
                 continue
             split = line.split(",")
             line_frame = int(split[0])
-            btDict[line_frame] = []
-    print("Brute force\n\n\n\n\\n\n\\n\\n\n\n\n\n")
-    with open(textFile, "r") as f:
-        for line in f:
-            if line[0] == "#" or line[0] == " ":
-                continue
-            split = line.split(",")
-            line_frame = int(split[0])
 
             line_detection = list(map(float, line.split(',')[2:6])) + [1.0, 1.0, 0.0]
-            btDict[line_frame].append(line_detection)
+            btDict.setdefault(line_frame,[]).append(line_detection)
 
     for key in btDict:
-        print(key)
-        print("This doesn't work but the other does") #debugging
-        # print(btDict[key])
         adjusted =  torch.tensor(btDict[key], device=device, dtype=torch.float32)
         # the gt format was x_bbox, y_bbox, w_bbox, h_bbox, converting to (x1, y1, x2, y2
         assert len(adjusted.shape) > 1, "Expected a multi-D shape to detections. Consult soccernet demotrack line 218."
@@ -136,9 +125,9 @@ def extractTracks(textFile, device):
 
         btDict[key] = adjusted
 
-    print([btDict[key] for key in list(btDict.keys())[0:3]]) #debug
-    print(type(btDict))
-    print(btDict.keys())
+    logger.info([btDict[key] for key in list(btDict.keys())[0:3]]) #debug
+    logger.info(type(btDict))
+    logger.info(btDict.keys())
     return btDict
 
 def write_results(filename, results):
