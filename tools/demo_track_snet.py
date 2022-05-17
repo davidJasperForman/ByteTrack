@@ -111,12 +111,10 @@ def extractTracks(textFile, device):
             if line[0] == "#" or line[0] == " ":
                 continue
             split = line.split(",")
-            print(line) #debug
             line_frame = int(split[0])
 
             line_detection = list(map(float, line.split(',')[2:6])) + [1.0, 1.0, 0.0]
             btDict.setdefault(line_frame,[]).append(line_detection)
-            print(line_detection)
 
     for key in btDict.keys():
         print(key) #debug
