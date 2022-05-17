@@ -301,7 +301,7 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
 
     gt = args.gtPath is not None
     if gt:
-        gtFilePath = args.path + '/../det/det.txt'
+        gtFilePath = args.gtPath
         gtDict = extractTracks(gtFilePath, predictor.device)
 
     tracker = BYTETracker(args, frame_rate=30)
