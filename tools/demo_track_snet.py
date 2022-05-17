@@ -119,6 +119,7 @@ def extractTracks(textFile, device):
             print(line_detection)
 
     for key in btDict.keys():
+        print(key) #debug
         adjusted =  torch.tensor(btDict[key], device=device, dtype=torch.float32)
         # the gt format was x_bbox, y_bbox, w_bbox, h_bbox, converting to (x1, y1, x2, y2
         assert len(adjusted.shape) > 1, "Expected a multi-D shape to detections. Consult soccernet demotrack line 218."
@@ -126,6 +127,7 @@ def extractTracks(textFile, device):
         adjusted[:, 3] = adjusted[:, 1] + adjusted[:, 3]
 
         btDict[key] = adjusted
+
     print([btDict[key] for key in list(btDict.keys())[0:3]]) #debug
     return btDict
 
