@@ -125,9 +125,9 @@ def extractTracks(textFile, device):
 
         btDict[key] = adjusted
 
-    logger.info([btDict[key] for key in list(btDict.keys())[0:3]]) #debug
-    logger.info(type(btDict))
-    logger.info(btDict.keys())
+    # logger.info([btDict[key] for key in list(btDict.keys())[0:3]]) #debug
+    # logger.info(type(btDict))
+    # logger.info(btDict.keys())
     return btDict
 
 def write_results(filename, results):
@@ -323,8 +323,10 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
             outputs, img_info = predictor.inference(frame, timer, detect=not gt)
             if gt:
                 outputs = [gtDict.get(frame_id+1, None)]
+                logger.info("We are getting the ground truth for a frame.")
             if outputs[0] is not None:
                 online_targets = tracker.update(outputs[0], [img_info['height'], img_info['width']], exp.test_size)
+                logger.info(f"Entered the loop--oth is not None--nubmer of targets: {len(online_targets)}")
                 online_tlwhs = []
                 online_ids = []
                 online_scores = []
