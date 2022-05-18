@@ -325,7 +325,6 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
             if gt:
                 outputs = [gtDict.get(frame_id+1, None)]
                 logger.info("We are getting the ground truth for a frame.") #debug
-            time.sleep(0.01)#debug
             if outputs[0] is not None:
                 online_targets = tracker.update(outputs[0], [img_info['height'], img_info['width']], exp.test_size)
                 logger.info(f"Entered the loop--oth is not None--nubmer of targets: {len(online_targets)}") #debug
@@ -360,7 +359,7 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
         frame_id += 1
 
     if args.save_result:
-        res_file = osp.join(vis_folder, f"{timestamp}.{seq_name}.txt")
+        res_file = osp.join(vis_folder, f"{seq_name}_{timestamp}.txt")
         with open(res_file, 'w') as f:
             f.writelines(results)
         logger.info(f"save results to {res_file}")
