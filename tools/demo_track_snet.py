@@ -34,6 +34,9 @@ def make_parser():
     parser.add_argument(
         "--gtPath", default = None, help="path to ground truth detections"
     )
+    parser.add_argument(
+        "--folderName", default=None, help="Hopefully a timestamp extension"
+    )
     parser.add_argument("--camid", type=int, default=0, help="webcam demo camera id")
     parser.add_argument(
         "--save_result",
@@ -225,9 +228,6 @@ def image_demo(predictor, vis_folder, timestamp, args):
         gtDict = extractTracks(gtFilePath, predictor.device)
 
     results = []
-    results.append("#\n")
-    results.append("#" + str(args) + "\n")
-    results.append("#frame,id,x1,y1,width,height,score,-1,-1,-1\n")
 
     for frame_id, img_path in enumerate(files, 1):
         outputs, img_info = predictor.inference(img_path, timer, detect=not gt)
@@ -263,6 +263,13 @@ def image_demo(predictor, vis_folder, timestamp, args):
             save_folder = osp.join(vis_folder, f'{seq_name}_{timestamp}')
             os.makedirs(save_folder, exist_ok=True)
             cv2.imwrite(osp.join(save_folder, osp.basename(img_path)), online_im)
+            argPrint = []
+            argPrint.append("#\n")
+            argPrint.append("#" + str(args) + "\n")
+            argPrint.append("#frame,id,x1,y1,width,height,score,-1,-1,-1\n")
+            with open(save_folder +"/args", "w") as f:
+                for line in argPrint:
+                    f.write(line)
 
         if frame_id % 20 == 0:
             logger.info('Processing frame {} ({:.2f} fps)'.format(frame_id, 1. / max(1e-5, timer.average_time)))
@@ -299,6 +306,13 @@ def imageflow_demo(predictor, vis_folder, timestamp, args):
     vid_writer = cv2.VideoWriter(
         save_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
     )
+    argPrint = []
+    argPrint.append("#\n")
+    argPrint.append("#" + str(args) + "\n")
+    argPrint.append("#frame,id,x1,y1,width,height,score,-1,-1,-1\n")
+    with open(save_folder + "/args.txt", "w") as f:
+        for line in argPrint:
+            f.write(line)
 
 
     gt = args.gtPath is not None
@@ -375,7 +389,8 @@ def main(exp, args):
     os.makedirs(output_dir, exist_ok=True)
 
     current_time = time.localtime()
-    timestamp = time.strftime("%Y_%m_%d_%H_%M_%S", current_time)
+    # timestamp = time.strftime("%Y_%m_%d_%H_%M_%S", current_time)
+    timestamp = args.folderName
     if args.save_result:
         vis_folder = osp.join(output_dir, "track_vis"+"_"+timestamp)
         os.makedirs(vis_folder, exist_ok=True)
