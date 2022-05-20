@@ -134,6 +134,63 @@ def extractTracks(textFile, device):
     # logger.info(btDict.keys())
     return btDict
 
+def indivTracks(results):
+    trackDict = {}
+    for linetxt in results:
+        line = linetxt.split(",")
+        trackingID = line[1]
+        trackDict.setdefault(trackingID,[]).append(line)
+    return trackDict
+
+def recombineTracks(trackDict):
+    results = []
+    for i in range(30*3600*24*7*365):#while True
+        toBreak = True
+        for key,lines in trackDict.items():
+            if len(lines) == 0:
+                continue
+            else:
+                toBreak = False
+            line = lines[0]
+            if line[0] == str(i):
+                results.append(f"{line[0]},{line[1]},{line[2]},{line[3]},{line[4]},{line[5]},{line[6]},-1,-1,-1\n")
+                lines.pop(0)
+        if toBreak:
+            break
+    return results
+
+def likelyBall(line,ballSize, ballRatio):
+    tlwh = [float(item) for item in line[2:6]]
+    size = tlwh[2]*tlwh[3]
+    ratio = max(tlwh[2],tlwh[3]) / min(tlwh[2],tlwh[3])
+    return size < ballSize and ratio < ballRatio
+
+
+def processForBall(results, ballSize, ballRatio=1.7):
+    ballID = 10000
+    trackDict = indivTracks(results)
+    ballFrameID = [-1,-1]
+    hopeToSwitch = []
+    for key in trackDict:
+        oneTrack = trackDict[key]
+        hope = 0
+        for line in oneTrack:
+            if likelyBall(line, ballSize, ballRatio):
+                hope +=1
+        if hope == len(oneTrack) or len(oneTrack) > 10 and hope > 0.9*len(oneTrack):
+            hopeToSwitch.append([len(oneTrack),key])
+
+    hopeToSwitch = sorted(hopeToSwitch)
+    seenFrames = []
+    for item in hopeToSwitch:
+        key = item[1]
+        for line in trackDict[key]:
+            if line[0] not in seenFrames:
+                seenFrames.append(line[0])
+                line[1] = str(ballID)
+    return recombineTracks(trackDict)
+
+
 def write_results(filename, results):
     save_format = '{frame},{id},{x1},{y1},{w},{h},{s},-1,-1,-1\n'
     with open(filename, 'w') as f:
