@@ -335,6 +335,7 @@ def image_demo(predictor, vis_folder, timestamp, args):
         if ch == 27 or ch == ord("q") or ch == ord("Q"):
             break
 
+    results = processForBall(results, 40*40, ballRatio=1.7)
     if args.save_result:
         res_file = osp.join(vis_folder, f"{timestamp}.{seq_name}.txt")
         with open(res_file, 'w') as f:
@@ -427,6 +428,7 @@ def imageflow_demo(predictor, vis_folder, timestamp, args):
             break
         frame_id += 1
 
+    results = processForBall(results, 40 * 40, ballRatio=1.7)
     if args.save_result:
         res_file = osp.join(vis_folder, f"{seq_name}_{timestamp}.txt")
         with open(res_file, 'w') as f:
