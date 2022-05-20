@@ -382,9 +382,6 @@ def imageflow_demo(predictor, vis_folder, timestamp, args):
     timer = Timer()
     frame_id = 0
     results = []
-    results.append("#\n")
-    results.append("#" + str(args)+"\n") 
-    results.append("#frame,id,x1,y1,width,height,score,-1,-1,-1\n")
 
     while True:
         if frame_id % 20 == 0:
@@ -394,10 +391,10 @@ def imageflow_demo(predictor, vis_folder, timestamp, args):
             outputs, img_info = predictor.inference(frame, timer, detect=not gt)
             if gt:
                 outputs = [gtDict.get(frame_id+1, None)]
-                logger.info("We are getting the ground truth for a frame.") #debug
+                # logger.info("We are getting the ground truth for a frame.") #debug
             if outputs[0] is not None:
                 online_targets = tracker.update(outputs[0], [img_info['height'], img_info['width']], exp.test_size)
-                logger.info(f"Entered the loop--oth is not None--nubmer of targets: {len(online_targets)}") #debug
+                # logger.info(f"Entered the loop--oth is not None--nubmer of targets: {len(online_targets)}") #debug
                 online_tlwhs = []
                 online_ids = []
                 online_scores = []
